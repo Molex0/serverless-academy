@@ -28,18 +28,39 @@ bot.onText(/^\/start|^\/go_back$/, function (msg) {
 })
 
 //Weather bot
-const getWeather = async () => {
-  const data = await axios.get(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+const getWeather = async (interval) => {
+  const forecast = await axios.get(
+    `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`
   )
-  const { weather, main, wind, name } = data.data
-  const text = `
-    ${name} forecast:\n
-    Weather: ${weather[0].main},
-    Temperature: ${Math.floor(main.temp - 273.15)}°C,
-    Feels like: ${Math.floor(main.feels_like - 273.15)}°C,
-    Wind speed: ${wind.speed} m/s`
+  let len
+  let step
+  switch (interval) {
+    case 3:
+      len = 7
+      step = 1
+      break
+    case 6:
+      len = 14
+      step = 2
+      break
+    default:
+      len = 7
+      step = 1
+      break
+  }
+  const data = forecast.data.list
+  let text = ""
+  for (let index = 0; index < len; index += step) {
+    text += `
+      
+    Date: ${data[index].dt_txt}
 
+    Weather: ${data[index].weather[0].main},
+    Temperature: ${Math.floor(data[index].main.temp - 273.15)}°C,
+    Feels like: ${Math.floor(data[index].main.feels_like - 273.15)}°C,
+    Wind speed: ${data[index].wind.speed} m/s
+    `
+  }
   return text
 }
 
@@ -47,43 +68,21 @@ bot.onText(/^\/Weather$/, async (msg) => {
   const opts = {
     reply_markup: {
       resize_keyboard: true,
-      keyboard: [["/every_3_hours", "/every_6_hours"], ["/stop"], ["/go_back"]],
+      keyboard: [["/every_3_hours", "/every_6_hours"], ["/go_back"]],
     },
   }
-  const text =
-    (await getWeather()) +
-    "\n\nYou can get info about weather every 3 or 6 hours. Choose what you want"
-  bot.sendMessage(msg.chat.id, text, opts)
+  bot.sendMessage(msg.chat.id, "Choose interval", opts)
 })
 
-bot.onText(/^\/every_3_hours$/, (msg) => {
-  bot.sendMessage(
-    msg.from.id,
-    "Forecast will update every 3 hours. Send /stop if you do not want"
-  )
-  const interval = setInterval(async () => {
-    const text =
-      (await getWeather()) + "\n\nAfter 3 hours forecast will be updated"
-    bot.sendMessage(msg.chat.id, text)
-  }, 10800000) //3 hours
-  bot.on("message", (msg) => clearInterval(interval))
+bot.onText(/^\/every_3_hours$/, async (msg) => {
+  const text = await getWeather(3)
+  bot.sendMessage(msg.chat.id, text)
 })
 
-bot.onText(/^\/every_6_hours$/, (msg) => {
-  bot.sendMessage(
-    msg.from.id,
-    "Forecast will update every 6 hours. Send /stop if you do not want"
-  )
-  const interval = setInterval(async () => {
-    const text =
-      (await getWeather()) +
-      "\n\nAfter 6 hours forecast will be updated. Send /stop if you do not want"
-    bot.sendMessage(msg.chat.id, text)
-  }, 21600000) //6 hours
-  bot.on("message", (msg) => clearInterval(interval))
+bot.onText(/^\/every_6_hours$/, async (msg) => {
+  const text = await getWeather(6)
+  bot.sendMessage(msg.chat.id, text)
 })
-
-bot.onText(/^\/stop$/, (msg) => {})
 
 //Exchange rates bot
 const monoRequest = async () => {
