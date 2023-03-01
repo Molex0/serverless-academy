@@ -1,7 +1,8 @@
 import axios from "axios"
 import { data } from "./data.js"
 
-const flattenObj = (ob) => {//flat object to find 'isDone' param
+const flattenObj = (ob) => {
+  //flat object to find 'isDone' param
   let result = {}
   for (const i in ob) {
     if (typeof ob[i] === "object" && !Array.isArray(ob[i])) {
@@ -9,8 +10,7 @@ const flattenObj = (ob) => {//flat object to find 'isDone' param
       for (const j in temp) {
         result[j] = temp[j]
       }
-    }
-    else {
+    } else {
       result[i] = ob[i]
     }
   }
