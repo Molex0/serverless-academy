@@ -1,23 +1,15 @@
 import axios from "axios"
 import { data } from "./data.js"
 
-const flattenObj = (ob) => {
+const flattenObj = (ob) => {//flat object to find 'isDone' param
   let result = {}
-
-  // loop through the object "ob"
   for (const i in ob) {
-    // We check the type of the i using
-    // typeof() function and recursively
-    // call the function again
     if (typeof ob[i] === "object" && !Array.isArray(ob[i])) {
       const temp = flattenObj(ob[i])
       for (const j in temp) {
-        // Store temp in result
         result[j] = temp[j]
       }
     }
-
-    // Else store ob[i] in result directly
     else {
       result[i] = ob[i]
     }
@@ -25,7 +17,7 @@ const flattenObj = (ob) => {
   return result
 }
 
-async function getJson(arr) {
+async function checkAllJson(arr) {
   let trueValues = 0
   let falseValues = 0
   let errorCounter = 0
@@ -55,4 +47,4 @@ async function getJson(arr) {
   )
 }
 
-getJson(data)
+checkAllJson(data)

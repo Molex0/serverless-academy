@@ -1,21 +1,11 @@
 const TelegramBot = require("node-telegram-bot-api")
 const { Command } = require("commander")
-const fs = require("fs")
 
-const TOKEN = "6161130240:AAG8Zc1C25fs1gDBBidxPAvFNa_wu-EvcTs"
+const TOKEN = "6161130240:AAG8Zc1C25fs1gDBBidxPAvFNa_wu-EvcTs" //put your token
 const bot = new TelegramBot(TOKEN, { polling: true })
 const program = new Command()
 
-const chatId = fs.readFileSync("secret.txt", "utf8")
-
-if (chatId === '') {
-  console.log("Send any message to run the app")
-  bot.on("message", (msg) => {
-    const chatId = msg.from.id
-    fs.writeFileSync("secret.txt", chatId)
-    process.exit()
-  })
-}
+const chatId = 496329949 //put your chat id
 
 program
   .command("send-message")
