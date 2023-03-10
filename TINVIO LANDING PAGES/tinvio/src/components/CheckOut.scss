@@ -1,0 +1,48 @@
+.checkOut {
+    position: relative;
+    margin-top: -12%;
+    .content{
+        display: flex;
+        gap: 10%;
+        box-sizing: border-box;
+        margin-top: -36%;
+    }
+    .back{
+        position: relative;
+        z-index: -20;
+        display: block;
+        margin-left: auto;
+        margin-top: -28%;
+    }
+    .right{
+        margin-top: 40px;
+    }
+    
+    .title {
+        font-weight: 600;
+        font-size: 48px;
+        line-height: 59px;
+    }
+    .subtitle {
+        font-family: 'Inter';
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 130%;
+        color:#5C5C5C;
+        margin-bottom: 35px;
+    }
+    .btn {
+        border: none;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 22px;
+        padding: 20px 75px;
+        color: #212121;
+        background-color: #FFFFFF;
+        border-radius: 18px;
+        ::before {
+            content: '\25BA';
+        }
+    }
+}
